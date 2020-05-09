@@ -1,0 +1,558 @@
+segment .data
+
+        str_welcome                                     db              "Welcome to the table! Your starting purse is $50, each hand is $5. May the odds be ever in your favor!", 10, 0
+        str_rules                                       db              "Dealer has to hit on a soft 17, no splitting or doubling down. No insurance. Bet back on a push. Play until you select to walk or your purse hits 0.", 10, 0
+        str_hit_bj                                      db              "Blackjack pays $8 on your $5 bet!", 10, 0
+        str_deal                                        db              "Enter 'D' to deal or 'W' to walk away.", 10, 0
+        str_player_blackjack                            db              "Winner Winner, Chicken Dinner!", 10, 0
+        str_dealer_blackjack                            db              "Dealer has Blackjack, bad luck there!", 10, 0
+        str_player_win                                  db              "Congrats, you won that hand!", 10, 0
+        str_player_bust                                 db              "Over 21, you lose.", 10 ,0
+        str_player_lose                                 db              "Better luck next time...", 10, 0
+        str_push                                        db              "It's a push, still better than an L!", 10 ,0
+        str_purse                                       db              "Player's purse: $", 0
+        str_broke                                       db              "You're broke, go home...", 10, 0
+        str_player_hand                                 db              "Your hand: ", 0
+        str_player_total                                db              "Current total: ", 0
+        str_dealer_hand                                 db              "Dealer's hand: ", 0
+        str_dealer_total                                db              "Dealer's total: ", 0
+        str_hit                                         db              "Enter 'H' to hit or 'S' to stay.", 10, 0
+
+        var_purse                                       dd              50
+        var_bet                                         dd              5
+
+        acehearts                                       db              "AH",  0
+        twohearts                                       db              "2H",  0
+        threehearts                                     db              "3H",  0
+        fourhearts                                      db              "4H",  0
+        fivehearts                                      db              "5H",  0
+        sixhearts                                       db              "6H",  0
+        sevenhearts                                     db              "7H",  0
+        eighthearts                                     db              "8H",  0
+        ninehearts                                      db              "9H",  0
+        tenhearts                                       db              "10H", 0
+        jackhearts                                      db              "JH",  0
+        queenhearts                                     db              "QH",  0
+        kinghearts                                      db              "KH",  0
+
+        acespades                                       db              "AS",  0
+        twospades                                       db              "2S",  0
+        threespades                                     db              "3S",  0
+        fourspades                                      db              "4S",  0
+        fivespades                                      db              "5S",  0
+        sixspades                                       db              "6S",  0
+        sevenspades                                     db              "7S",  0
+        eightspades                                     db              "8S",  0
+        ninespades                                      db              "9S",  0
+        tenspades                                       db              "10S", 0
+        jackspades                                      db              "JS",  0
+        queenspades                                     db              "QS",  0
+        kingspades                                      db              "KS",  0
+
+        acedia                                          db              "AD",  0
+        twodia                                          db              "2D",  0
+        threedia                                        db              "3D",  0
+        fourdia                                         db              "4D",  0
+        fivedia                                         db              "5D",  0
+        sixdia                                          db              "6D",  0
+        sevendia                                        db              "7D",  0
+        eightdia                                        db              "8D",  0
+        ninedia                                         db              "9D",  0
+        tendia                                          db              "10D", 0
+        jackdia                                         db              "JD",  0
+        queendia                                        db              "QD",  0
+        kingdia                                         db              "KD",  0
+
+        aceclubs                                        db              "AC",  0
+        twoclubs                                        db              "2C",  0
+        threeclubs                                      db              "3C",  0
+        fourclubs                                       db              "4C",  0
+        fiveclubs                                       db              "5C",  0
+        sixclubs                                        db              "6C",  0
+        sevenclubs                                      db              "7C",  0
+        eightclubs                                      db              "8C",  0
+        nineclubs                                       db              "9C",  0
+        tenclubs                                        db              "10C", 0
+        jackclubs                                       db              "JC",  0
+        queenclubs                                      db              "QC",  0
+        kingclubs                                       db              "KC",  0
+
+        cards                                           dd              acehearts,twohearts,threehearts,fourhearts,fivehearts,sixhearts,sevenhearts,eighthearts,ninehearts,tenhearts,jackhearts,queenhearts,kinghearts,acespades,twospades,threespades,fourspades,fivespades,sixspades,sevenspades,eightspades,ninespades,tenspades,jackspades,queenspades,kingspades,acedia,twodia,threedia,fourdia,fivedia,sixdia,sevendia,eightdia,ninedia,tendia,jackdia,queendia,kingdia,aceclubs,twoclubs,threeclubs,fourclubs,fiveclubs,sixclubs,sevenclubs,eightclubs,nineclubs,tenclubs,jackclubs,queenclubs,kingclubs
+        cards_val                                       dd              11,2,3,4,5,6,7,8,9,10,10,10,10,11,2,3,4,5,6,7,8,9,10,10,10,10,11,2,3,4,5,6,7,8,9,10,10,10,10,11,2,3,4,5,6,7,8,9,10,10,10,10
+
+;       p_one_card                                      db              "%s", 10, 0
+;       p_one_value                                     db              "%d", 10, 0
+;       p_two_card                                      db              "%s", 10, 0
+;       p_two_value                                     db              "%d", 10, 0
+;       d_one_card                                      db              "%s", 10, 0
+;       d_one_value                                     db              "%d", 10, 0
+;       d_two_card                                      db              "%s", 10, 0
+;       d_two_value                                     db              "%d", 10, 0
+
+;       p_hit_card                                      db              "%s", 10, 0
+;       p_hit_value                                     db              "%d", 10, 0
+;       d_hit_card                                      db              "%s", 10, 0
+;       d_hit_value                                     db              "%d", 10, 0
+
+
+segment .bss
+
+
+segment .text
+        global  asm_main
+        extern  time
+        extern  srand
+        extern  rand
+        extern  printf
+        extern  scanf
+
+asm_main:
+        push    ebp
+        mov             ebp, esp
+        ; ********** CODE STARTS HERE **********
+
+        ; srand( time( 0 ) );
+        push    0
+        call    time
+        add             esp, 4
+        push    eax
+        call    srand
+        add             esp, 4
+
+        call    welcome
+
+        call    deal
+
+        end:
+
+        ; *********** CODE ENDS HERE ***********
+        mov             eax, 0
+        mov             esp, ebp
+        pop             ebp
+        ret
+
+welcome:
+        push    ebp
+        mov             ebp, esp
+
+        mov             eax, str_welcome
+        call    print_string
+        mov             eax, str_rules
+        call    print_string
+
+        mov             esp, ebp
+        pop             ebp
+        ret
+
+deal:
+        push    ebp
+        mov             ebp, esp
+
+        sub             esp, 88
+
+top_deal:
+;call   print_char
+
+        mov             eax, str_purse
+        call    print_string
+        mov             eax, DWORD[var_purse]
+        call    print_int
+        call    print_nl
+
+                cmp             eax, 5
+                jl              out_of_cash
+
+        mov             eax, str_deal
+        call    print_string
+
+        call    read_char
+        mov             bl, al                  ;mov D or W to bl
+        mov             al, 'W'
+        cmp             bl, al
+        call    read_char
+        je              walk
+
+        ;DEAL TO PLAYER
+        call    random
+                                                                               ;mov             DWORD[ebp - 4], ebx
+        mov             DWORD[ebp - 28], ebx                                   ;first card string
+                                                                               ;mov             DWORD[ebp - 8], esi
+        mov             DWORD[ebp - 4], esi                                    ;first card int
+                                                                               ;mov             DWORD[ebp - 36], esi
+        mov             DWORD[ebp - 24], esi
+
+        call    random
+        add             DWORD[ebp - 24], esi
+                                                                               ;add             DWORD[ebp - 36], esi
+                                                                               ;mov             DWORD[ebp - 12], ebx
+        mov             DWORD[ebp - 32], ebx                                   ;second card string
+                                                                               ;mov             DWORD[ebp -16], esi
+        mov             DWORD[ebp - 8], esi                                    ;second card int
+
+                ;PRINT PLAYERS HAND                                            //AD/9H just an example hand in comments
+                mov             eax, str_player_hand                           ;"Your hand: "
+                call    print_string
+
+                                                                               ;mov             eax, DWORD[ebp - 4]
+                mov             eax, DWORD[ebp - 28]                           ;"AD"
+                call    print_string
+
+                mov             al, '/'
+                call    print_char                                             ;/
+
+                                                                               ;mov             eax, DWORD[ebp - 12]
+                mov             eax, DWORD[ebp - 32]                           ;"9H"
+                call    print_string
+                call    print_nl                                               ;"Your hand: AD/9H"
+
+        ;CHECK PLAYER BLACKJACK
+                                                                               ;cmp             DWORD[ebp - 36], 21
+        cmp             DWORD[ebp - 24], 21
+;       je              ace_check_player
+        jne             no_blackjack
+
+                mov             eax, str_player_blackjack
+                call    print_string
+
+                add             DWORD[var_purse], 8
+
+                jmp             top_deal
+
+                no_blackjack:
+
+
+        ;DEAL TO DEALER
+        mov             eax, str_dealer_hand
+        call    print_string
+        call    random
+                                                                               ;mov             DWORD[ebp - 20], ebx                    ;first dealer string
+        mov             DWORD[ebp - 72], ebx
+                                                                               ;mov             DWORD[ebp - 24], esi
+        mov             DWORD[ebp - 48], esi                    ;first dealer int
+
+        call    random
+                                                                               ;mov             DWORD[ebp - 28], ebx
+        mov             DWORD [ebp - 76], ebx                   ;second dealer string
+                                                                               ;mov             DWORD[ebp - 32], esi
+        mov             DWORD [ebp - 52], esi                   ;second dealer int
+                                                                               ;mov             ecx,DWORD[ebp - 24]
+        mov             ecx, DWORD[ebp - 48]                    ;mov first int to ecx
+                                                                               ;add             ecx, DWORD[ebp - 32]
+        add             ecx, DWORD[ebp - 52]                    ;add first card and second card together
+                                                                               ;mov             DWORD[ebp - 40], ecx
+        mov             DWORD[ebp - 68], ecx                    ;mov total for dealer to ecx
+
+
+                ;PRINT DEALER FIRST CARD
+                                                                               ;mov             eax, DWORD[ebp - 20]
+                mov             eax, DWORD[ebp - 72]
+                call    print_string
+                mov             al, '/'
+                call    print_char
+                mov             al, '?'
+                call    print_char
+                call    print_nl
+
+        cmp             DWORD[ebp - 68], 21
+        jne             no_dealer_blackjack
+
+                mov             eax, str_dealer_blackjack
+                call    print_string
+
+                mov             eax, str_dealer_hand
+                call    print_string
+                                                                               ;mov             eax, DWORD[ebp - 20]
+                mov             eax, DWORD[ebp - 72]
+                call    print_string
+                mov             al, '/'
+                call    print_char
+                                                                               ;mov             eax, DWORD[ebp - 28]
+                mov             eax, DWORD[ebp - 76]
+                call    print_string
+                call    print_nl
+
+
+                sub             DWORD[var_purse], 5
+
+                jmp             top_deal
+
+                no_dealer_blackjack:
+
+
+
+        ;HIT/STAY
+
+        mov             DWORD[ebp - 88], 2
+
+        hitStay:
+        mov             eax, str_player_total
+        call    print_string
+        mov             eax, DWORD[ebp - 24]            ;updates player total after each hit
+        call    print_int
+        call    print_nl
+        inc             DWORD[ebp - 88]
+        mov             eax, str_hit
+        call    print_string
+
+                                                                               ;mov             esi, DWORD[ebp - 36]
+        mov             esi, DWORD[ebp - 24]                    ;moves player's total to variable
+        call    read_char
+        mov             ebx, eax
+        call    read_char
+        mov             eax, 'S'
+        cmp             ebx, eax
+        je              stay
+
+
+                call    player_hit
+                mov             eax, ebx
+                call    print_string
+                call    print_nl
+
+                mov             eax, 4
+                imul    DWORD[ebp - 88]
+                mov             ebx, ebp
+                sub             ebx, eax
+                mov             DWORD[ebx], esi         ;hit card value
+
+                mov             eax, DWORD[ebp - 24]            ;move player total from deal to eax
+                add             eax, DWORD[ebx]
+                mov             DWORD[ebp - 24], eax
+
+                mov             eax, 4
+                imul    DWORD[ebp - 88]
+                mov             ebx, ebp
+                sub             ebx, eax
+                mov             eax, DWORD[ebp - 24]
+
+                mov             esi, DWORD[ebp - 24]
+                cmp             esi, 21
+                je              stay
+                jl              hitStay
+
+;               ;CHECK PLAYER ACE AFTER HIT
+                check_ace_hit:
+                mov             esi, 3
+                top_check_loop:
+                cmp             esi, 5
+                jg              end_player_ace_hit
+
+                mov             eax, 4
+                imul    DWORD[ebp - 88]
+                mov             ebx, ebp
+                sub             ebx, eax
+                        mov             ebx, DWORD[ebx]
+                        mov             edi, 11
+                        cmp             ebx, edi
+                        jne             no_ace_hit
+
+                                sub             DWORD[ebp - 24], 10
+                                jmp             hitStay
+
+                no_ace_hit:
+                inc             esi
+                jmp             top_check_loop
+                end_player_ace_hit:
+
+
+        jmp             player_bust
+
+        stay:
+        mov             DWORD[ebp - 24], esi                    ;moves player's total to variable
+
+        ;SHOW DEALER FULL HAND
+        mov             eax, str_dealer_hand
+        call    print_string
+
+        mov             eax, DWORD[ebp - 72]
+        call    print_string
+        mov             al, '/'
+        call    print_char
+
+        mov             eax, DWORD[ebp - 76]
+        call    print_string
+        call    print_nl
+
+
+                mov             ecx, DWORD[ebp - 68]                    ;Dealer has to stay on 17+
+                cmp             ecx, 17                                        ;cmp to 17
+                jge             dealer_stay                                    ;jmp if equal or greater than 17 to dealer_stay else, start a hit loop
+
+
+        mov             DWORD[ebp - 84], 17
+
+        dealer_hit_loop:
+        inc             DWORD[ebp - 84]
+        call    dealer_hit
+
+                mov             eax, ebx                                       ;move dealer 3... card int eax
+                call    print_string                            ;print hit card
+                call    print_nl
+
+                mov             eax, 4
+                imul    DWORD[ebp - 84]
+                mov             ebx, ebp
+                sub             ebx, eax
+                mov             DWORD[ebx], esi
+
+        mov             eax, str_dealer_total
+        call    print_string
+        mov             eax, DWORD[ebp - 68]
+        add             eax, DWORD[ebx]
+        mov             DWORD[ebp - 68], eax
+        call    print_int
+        call    print_nl
+
+                mov             eax, 4
+                imul    DWORD[ebp - 84]
+                mov             ebx, ebp
+                sub             ebx, eax
+                mov             eax, DWORD[ebp - 68]
+
+        mov             esi, DWORD[ebp - 68]
+        cmp             esi, 21
+        je              dealer_stay
+                cmp             esi, 17
+                jl              dealer_hit_loop
+
+        check_ace_hit_dealer:
+        mov             esi, 3
+        top_dealer_check_loop:
+        cmp             esi, 5
+        jg              end_dealer_ace_hit
+
+                mov             eax, 4
+                imul    DWORD[ebp - 84]
+                mov             ebx, ebp
+                sub             ebx, eax
+                mov             ebx, DWORD[ebx]
+                mov             edi, 11
+                cmp     ebx, edi
+                jne             no_ace_dealer_hit
+
+                        sub             DWORD[ebp - 68], 10
+                        jmp             dealer_hit_loop
+
+                no_ace_dealer_hit:
+                inc             esi
+                jmp             top_dealer_check_loop
+                end_dealer_ace_hit:
+
+;       mov             eax, DWORD[ebp - 68]
+;       call    print_nl
+;       call    print_int
+;       call    print_nl
+
+
+
+        mov             ebx, DWORD[ebp - 68]
+        cmp             ebx, 21
+        jge             dealer_bust
+
+        dealer_stay:
+                                                                               ;mov             DWORD[ebp - 40], esi
+;       mov             DWORD[ebp - 68], esi
+        jmp             compare
+
+        dealer_bust:
+        mov             eax, DWORD[ebp - 68]
+        call    print_int
+        call    print_nl
+        mov             eax, str_player_win
+        call    print_string
+
+        add             DWORD[var_purse], 5
+        jmp             top_deal
+
+        player_bust:
+        mov             eax, str_player_bust
+        call    print_string
+
+        sub             DWORD[var_purse], 5
+        jmp             top_deal
+
+        compare:
+        mov             eax, str_player_total                                  ;mov             ebx, DWORD[ebp - 36]
+        mov             ebx, DWORD[ebp - 24]
+        mov             eax, ebx
+        call    print_int
+        call    print_nl
+
+        mov             eax, str_dealer_total
+        mov             edx, DWORD[ebp - 68]
+        mov             eax, edx
+        call    print_int
+        call    print_nl
+        cmp             ebx, edx
+        je              push
+        jl              dealerwin
+
+                mov             eax, str_player_win
+                call    print_string
+
+                add             DWORD[var_purse], 5
+                jmp             top_deal
+
+        dealerwin:
+        mov             eax, str_player_lose
+        call    print_string
+
+        sub             DWORD[var_purse], 5
+        jmp             top_deal
+
+        push:
+        mov             eax, str_push
+        call    print_string
+
+        jmp             top_deal
+
+        out_of_cash:
+        mov             eax, str_broke
+        call    print_string
+
+        walk:
+
+        jmp             end
+
+        mov             esp, ebp
+        pop             ebp
+        ret
+
+random:
+        push    ebp
+        mov             ebp, esp
+
+        ; int a = rand() % 52;  // 0-51
+        call    rand
+        mov             edi, 51
+        cdq
+        idiv    edi
+        mov             eax, DWORD [cards + edx * 4]
+        mov             ebx, eax
+        mov             eax, DWORD [cards_val + edx * 4]
+        mov             esi, eax
+
+        mov             esp, ebp
+        pop             ebp
+        ret
+
+player_hit:
+        push    ebp
+        mov             ebp, esp
+
+        call    random
+
+        mov             esp, ebp
+        pop             ebp
+        ret
+
+dealer_hit:
+        push    ebp
+        mov             ebp, esp
+
+        call    random
+
+        mov             esp, ebp
+        pop             ebp
+        ret
+
